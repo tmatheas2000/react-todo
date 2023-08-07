@@ -58,6 +58,7 @@ jobs:
           name: Firebase Deploy
           command: |
             sudo npm install -g firebase-tools@12.4.7
+            echo $FIREBASE_SERVICE_ACCOUNT
             # echo $FIREBASE_SERVICE_ACCOUNT > firebase-key.json
             # firebase deploy --only hosting:react-todo-circleci --token "$FIREBASE_TOKEN" --project fir-intro-4b6a4 --token "$FIREBASE_TOKEN"
             # Replace '<your-firebase-project-id>' with your actual Firebase project ID
