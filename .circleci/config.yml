@@ -2,7 +2,33 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/node:14 # Choose the appropriate Node.js version
+      - image: circleci/node:14
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+
+      - run:
+          name: Install Dependencies
+          command: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+
+      - run:
+          name: Build
+          command: npm run build
+
+  deploy_firebase:
+    docker:
+      - image: circleci/node:14
 
     working_directory: ~/repo
 
@@ -26,13 +52,21 @@ jobs:
 
       - run:
           name: Build
-          command: npm run build # Replace with your build command (e.g., npm run build)
+          command: npm run build
 
-      # Add more steps for testing, linting, or other tasks as needed
+      - run:
+          name: Firebase Deploy
+          command: |
+            echo $FIREBASE_SERVICE_ACCOUNT > firebase-key.json
+            npm install -g firebase-tools
+            firebase deploy -only -hosting:react-todo-circleci --token "$FIREBASE_TOKEN" --project <your-firebase-project-id> --token "$FIREBASE_TOKEN"
+            # Replace '<your-firebase-project-id>' with your actual Firebase project ID
 
 workflows:
   version: 2
   build-deploy:
     jobs:
       - build
-      # Add other deployment jobs as needed
+      - deploy_firebase:
+          requires:
+            - build
