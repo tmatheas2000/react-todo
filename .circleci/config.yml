@@ -58,12 +58,8 @@ jobs:
           name: Firebase Deploy
           command: |
             sudo npm install -g firebase-tools@12.4.7
-            echo $FIREBASE_SERVICE_ACCOUNT | base64 > credentials.json
-            export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
-            firebase deploy --only hosting:react-todo-circleci --non-interactive
-            # echo $FIREBASE_SERVICE_ACCOUNT > firebase-key.json
-            # firebase deploy --only hosting:react-todo-circleci --token "$FIREBASE_SERVICE_ACCOUNT" --project fir-intro-4b6a4 --token "$FIREBASE_SERVICE_ACCOUNT"
-
+            firebase deploy --only hosting:react-todo-circleci --token=$FIREBASE_TOKEN
+            
 workflows:
   version: 2
   build-deploy:
