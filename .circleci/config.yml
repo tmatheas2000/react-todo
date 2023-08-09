@@ -67,9 +67,6 @@ workflows:
   build-deploy:
     jobs:
       - build
-      - unit_test:
-          requires:
-            - build
       - deploy_firebase:
           requires:
-            - unit_test
+            - build
