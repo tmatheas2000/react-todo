@@ -63,7 +63,7 @@ workflows:
   build-deploy:
     jobs:
       - lint
-      - unit_test
+      - unit_test:
           requires:
             - lint
       - build:
