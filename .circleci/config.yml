@@ -3,22 +3,45 @@ executors:
   node-executor:
     docker:
       - image: cimg/node:18.16.1
-jobs:     
-  build:
+jobs:
+  lint:
     executor: node-executor
     steps:
       - checkout
+
       - run:
           name: Install Dependencies
           command: npm install
 
       - run:
-          name: Build
-          command: npm run build
+          name: Linting
+          command: npm run lint
+          
+  unit-test:
+    executor: node-executor
+    steps:
+      - checkout
 
       - run:
-          name: Unit Test
+          name: Install Dependencies
+          command: npm install
+
+      - run:
+          name: Run Unit Test
           command: npm run test
+
+  build:
+    executor: node-executor
+    steps:
+      - checkout
+
+      - run:
+          name: Install Dependencies
+          command: npm install
+
+      - run:
+          name: Build Production
+          command: npm run build
 
   deploy:
     executor: node-executor
@@ -30,10 +53,6 @@ jobs:
           command: npm install
 
       - run:
-          name: Build
-          command: npm run build
-
-      - run:
           name: Firebase Deploy
           command: |
             sudo npm install -g firebase-tools@12.4.7
@@ -43,7 +62,13 @@ workflows:
   version: 2
   build-deploy:
     jobs:
-      - build
+      - lint
+      - unit-test
+          requires:
+            - lint
+      - build:
+          requires:
+            - unit-test
       - deploy:
           requires:
             - build
