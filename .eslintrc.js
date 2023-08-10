@@ -15,6 +15,11 @@ module.exports = {
     browser: true,
     es6: true,
   },
+  settings: {
+    react: {
+      version: 'detect', // Automatically detect React version
+    },
+  },
   plugins: ['react', 'react-hooks'],
   extends: ['eslint:recommended', 'plugin:react/recommended'],
   rules: {

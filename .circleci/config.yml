@@ -4,6 +4,19 @@ executors:
     docker:
       - image: cimg/node:18.16.1
 jobs:
+  browsers_list:
+    executor: node-executor
+    steps:
+      - checkout
+
+      - run:
+          name: Install Dependencies
+          command: npm install
+
+      - run:
+          name: Update Browsers List
+          command: npm run update-browserslist
+
   lint:
     executor: node-executor
     steps:
@@ -62,7 +75,10 @@ workflows:
   version: 2
   build-deploy:
     jobs:
-      - lint
+      - browsers_list
+      - lint:
+          requires:
+            - browsers_list
       - unit_test:
           requires:
             - lint
