@@ -43,7 +43,7 @@ jobs:
           name: Run Unit Test
           command: npm run test
 
-  build:
+  deploy:
     executor: node-executor
     steps:
       - checkout
@@ -55,15 +55,6 @@ jobs:
       - run:
           name: Build Production
           command: npm run build
-
-  deploy:
-    executor: node-executor
-    steps:
-      - checkout
-
-      - run:
-          name: Install Dependencies
-          command: npm install
 
       - run:
           name: Firebase Deploy
@@ -82,9 +73,6 @@ workflows:
       - unit_test:
           requires:
             - lint
-      - build:
-          requires:
-            - unit_test
       - deploy:
           requires:
-            - build
+            - unit_test
