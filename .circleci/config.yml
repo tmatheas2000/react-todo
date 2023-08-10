@@ -16,8 +16,8 @@ jobs:
       - run:
           name: Linting
           command: npm run lint
-          
-  unit-test:
+
+  unit_test:
     executor: node-executor
     steps:
       - checkout
@@ -63,12 +63,12 @@ workflows:
   build-deploy:
     jobs:
       - lint
-      - unit-test
+      - unit_test
           requires:
             - lint
       - build:
           requires:
-            - unit-test
+            - unit_test
       - deploy:
           requires:
             - build
